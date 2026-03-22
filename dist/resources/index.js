@@ -33,14 +33,12 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.offRamp = exports.onRamp = exports.webhookEndpoints = exports.apiKeys = exports.payouts = exports.escrows = exports.charges = exports.wallets = exports.accounts = exports.health = void 0;
+exports.offRamp = exports.onRamp = exports.webhookEndpoints = exports.escrows = exports.charges = exports.wallets = exports.accounts = exports.health = void 0;
 exports.health = __importStar(require("./health.js"));
 exports.accounts = __importStar(require("./accounts.js"));
 exports.wallets = __importStar(require("./wallets.js"));
 exports.charges = __importStar(require("./charges.js"));
 exports.escrows = __importStar(require("./escrows.js"));
-exports.payouts = __importStar(require("./payouts.js"));
-exports.apiKeys = __importStar(require("./api-keys.js"));
 exports.webhookEndpoints = __importStar(require("./webhook-endpoints.js"));
 exports.onRamp = __importStar(require("./on-ramp.js"));
 exports.offRamp = __importStar(require("./off-ramp.js"));

@@ -1,5 +1,5 @@
 /**
- * Request/response types for the Mesh Pay API (browser/React Native).
+ * Request/response types aligned with mesh-pay/docs/openapi.yml (MeshPay API v1).
  */
 export interface ListOptions {
     limit?: number;
@@ -13,71 +13,138 @@ export interface ListResponse<T> {
 export interface RequestOptions {
     idempotencyKey?: string;
 }
-export interface Account {
+export type WalletNetwork = "base" | "base-sepolia" | "ethereum";
+export interface AccountMembership {
     id: string;
-    wallet_id: string;
+    account_id: string;
     status: string;
-    created_at?: string;
+    created_at: string;
+    email: string | null;
 }
 export interface CreateAccountRequest {
     email: string;
 }
-export interface Wallet {
+export interface CreateAccountResponse {
+    id: string;
+    membership_id: string;
+    wallet_id?: string;
+    status: string;
+}
+export interface WalletSummary {
+    membership_id: string;
+    account_id: string;
+    status: string;
+    created_at: string;
+    wallet_id: string | null;
+    address: string | null;
+    blockchain: string | null;
+    external_wallet_id: string | null;
+}
+export interface TokenBalance {
+    symbol: string;
+    name: string;
+    contract_address: string;
+    amount_raw: string;
+    decimals: number;
+    amount: string;
+    network: string;
+}
+export interface WalletDetail {
     wallet_id: string;
     address: string;
-    account_id?: string;
+    blockchain: string;
+    external_wallet_id: string | null;
+    balance_network: string;
+    balances: TokenBalance[];
+    balance_error?: string;
+}
+export interface FiatAccount {
+    id: string;
+    provider: string;
+    external_account_id: string;
+    currency: string;
+    country: string;
+    label: string;
+    status: string;
+    metadata: Record<string, unknown>;
+    created_at: string;
+}
+export interface LinkFiatAccountRequest {
+    membership_id: string;
+    provider?: string;
+    external_account_id?: string;
+    provider_request?: Record<string, unknown>;
+    currency?: string;
+    country?: string;
+    label?: string;
+    metadata?: Record<string, unknown>;
 }
 export interface Charge {
     charge_id: string;
     escrow_id: string;
+    buyer_id?: string;
+    payer_membership_id?: string | null;
+    payee_membership_id?: string | null;
     status: string;
     amount?: number;
     currency?: string;
+    created_at?: string;
 }
 export interface CreateChargeRequest {
-    buyer_id: string;
-    seller_account_id: string;
+    payee_membership_id: string;
     amount: number;
+    payer_membership_id?: string;
+    buyer_id?: string;
     currency?: string;
+}
+export interface CreateChargeResponse {
+    charge_id: string;
+    escrow_id: string;
+    status: string;
+    escrow_contract_address?: string;
+    escrow_slot_id?: string;
+    amount?: number;
+    deposit_instructions?: string;
 }
 export interface RefundChargeRequest {
     amount?: number;
+    tx_hash?: string;
 }
 export interface FundChargeRequest {
-    entity_secret_ciphertext: string;
+    tx_hash?: string;
+    entity_secret_ciphertext?: string;
 }
 export interface Escrow {
     id: string;
     buyer_id: string;
-    seller_id: string;
-    wallet_id: string;
+    wallet_id?: string | null;
     amount: number;
     status: string;
+    created_at?: string;
+    payer_membership_id?: string | null;
+    payee_membership_id?: string | null;
+    escrow_contract_address?: string | null;
+    fund_tx_hash?: string | null;
 }
 export interface ReleaseEscrowResponse {
     status: string;
     seller_payout: number;
-    platform_fee: number;
+    meshpay_fee: number;
+    developer_fee: number;
+    release_tx_hash?: string;
 }
-export interface Payout {
-    id: string;
-    account_id: string;
-    amount: number;
+export interface OpenEscrowDisputeRequest {
+    tx_hash: string;
+}
+export interface ResolveEscrowDisputeRequest {
+    release_to_seller: boolean;
+}
+export interface ResolveEscrowDisputeResponse {
     status: string;
-}
-export interface CreatePayoutRequest {
-    account_id: string;
-    amount: number;
-}
-export interface ApiKey {
-    id: string;
-    name?: string | null;
-    keyPrefix: string;
-    key?: string;
-    createdAt: string;
-}
-export interface CreateApiKeyRequest {
-    name?: string;
+    seller_payout?: number;
+    meshpay_fee?: number;
+    developer_fee?: number;
+    resolve_tx_hash?: string;
 }
 export interface WebhookEndpoint {
     id: string;
@@ -98,35 +165,36 @@ export interface UpdateWebhookEndpointRequest {
     active?: boolean;
     events?: string[];
 }
-export interface OnRampQuoteRequest {
-    amount_usd?: number;
-    amount_usdc?: number;
+export interface OnRampSessionRequest {
+    destinationAddress: string;
+    purchaseCurrency: string;
+    destinationNetwork: string;
+    paymentAmount?: string;
+    purchaseAmount?: string;
+    paymentCurrency?: string;
+    paymentMethod?: string;
+    country?: string;
+    subdivision?: string;
+    redirectUrl?: string;
+    clientIp?: string;
+    partnerUserRef?: string;
 }
-export interface OnRampQuoteResponse {
-    quote_id: string;
-    from: string;
-    to: string;
-    rate: number;
-    fee?: number;
-    expires_at: string;
+export interface OffRampAddress {
+    address: string;
+    blockchains: string[];
 }
-export interface OnRampTradeRequest {
-    quote_id: string;
-}
-export interface OffRampQuoteRequest {
-    amount_usdc?: number;
-    amount_usd?: number;
-}
-export interface OffRampQuoteResponse {
-    quote_id: string;
-    from: string;
-    to: string;
-    rate: number;
-    fee?: number;
-    expires_at: string;
-}
-export interface OffRampTradeRequest {
-    quote_id: string;
+export interface OffRampSessionRequest {
+    addresses: OffRampAddress[];
+    partnerUserRef: string;
+    redirectUrl: string;
+    clientIp?: string;
+    defaultNetwork?: string;
+    defaultAsset?: string;
+    presetCryptoAmount?: number;
+    presetFiatAmount?: number;
+    defaultCashoutMethod?: string;
+    fiatCurrency?: string;
+    disableEdit?: boolean;
 }
 export interface HealthResponse {
     status: string;

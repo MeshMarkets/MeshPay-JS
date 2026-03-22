@@ -1,7 +1,7 @@
 "use strict";
 /**
  * Mesh Pay JavaScript/TypeScript SDK for browser and React Native.
- * Full API client with separation of concerns.
+ * Aligned with mesh-pay/docs/openapi.yml (MeshPay API v1).
  */
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -50,75 +50,70 @@ Object.defineProperty(exports, "verifySignature", { enumerable: true, get: funct
 class MeshPay {
     baseUrl;
     apiKey;
+    clientOpts;
     constructor(config) {
         this.apiKey = config.apiKey;
         this.baseUrl = (0, client_js_1.getBaseUrl)(config);
+        this.clientOpts = { useXApiKeyHeader: config.useXApiKeyHeader };
     }
     get health() {
         return {
-            get: () => resources.health.getHealth(this.baseUrl, this.apiKey),
+            get: () => resources.health.getHealth(this.baseUrl, this.apiKey, this.clientOpts),
         };
     }
     get accounts() {
         return {
-            create: (data) => resources.accounts.create(this.baseUrl, this.apiKey, data),
+            list: () => resources.accounts.list(this.baseUrl, this.apiKey, this.clientOpts),
+            create: (data) => resources.accounts.create(this.baseUrl, this.apiKey, data, this.clientOpts),
+            deleteMembership: (membershipId) => resources.accounts.deleteMembership(this.baseUrl, this.apiKey, membershipId, this.clientOpts),
         };
     }
     get wallets() {
         return {
-            create: (data) => resources.wallets.create(this.baseUrl, this.apiKey, data),
-            getByAccountId: (accountId) => resources.wallets.getByAccountId(this.baseUrl, this.apiKey, accountId),
+            list: () => resources.wallets.list(this.baseUrl, this.apiKey, this.clientOpts),
+            getDetail: (membershipId, options) => resources.wallets.getDetail(this.baseUrl, this.apiKey, membershipId, options, this.clientOpts),
+            listFiatAccounts: (membershipId) => resources.wallets.listFiatAccounts(this.baseUrl, this.apiKey, membershipId, this.clientOpts),
+            linkFiatAccount: (data, opts) => resources.wallets.linkFiatAccount(this.baseUrl, this.apiKey, data, opts, this.clientOpts),
+            unlinkFiatAccount: (membershipId, fiatAccountId, opts) => resources.wallets.unlinkFiatAccount(this.baseUrl, this.apiKey, membershipId, fiatAccountId, opts, this.clientOpts),
         };
     }
     get charges() {
         return {
-            list: (options) => resources.charges.list(this.baseUrl, this.apiKey, options),
-            get: (id) => resources.charges.get(this.baseUrl, this.apiKey, id),
-            create: (data, opts) => resources.charges.create(this.baseUrl, this.apiKey, data, opts),
-            fund: (chargeId, data, opts) => resources.charges.fund(this.baseUrl, this.apiKey, chargeId, data, opts),
-            refund: (chargeId, data, opts) => resources.charges.refund(this.baseUrl, this.apiKey, chargeId, data, opts),
+            list: (options) => resources.charges.list(this.baseUrl, this.apiKey, options, this.clientOpts),
+            get: (id) => resources.charges.get(this.baseUrl, this.apiKey, id, this.clientOpts),
+            create: (data, opts) => resources.charges.create(this.baseUrl, this.apiKey, data, opts, this.clientOpts),
+            fund: (chargeId, data, opts) => resources.charges.fund(this.baseUrl, this.apiKey, chargeId, data, opts, this.clientOpts),
+            cancel: (chargeId, opts) => resources.charges.cancel(this.baseUrl, this.apiKey, chargeId, opts, this.clientOpts),
+            refund: (chargeId, data, opts) => resources.charges.refund(this.baseUrl, this.apiKey, chargeId, data, opts, this.clientOpts),
         };
     }
     get escrows() {
         return {
-            list: (options) => resources.escrows.list(this.baseUrl, this.apiKey, options),
-            get: (id) => resources.escrows.get(this.baseUrl, this.apiKey, id),
-            release: (escrowId, opts) => resources.escrows.release(this.baseUrl, this.apiKey, escrowId, opts),
-        };
-    }
-    get payouts() {
-        return {
-            list: (options) => resources.payouts.list(this.baseUrl, this.apiKey, options),
-            get: (id) => resources.payouts.get(this.baseUrl, this.apiKey, id),
-            create: (data, opts) => resources.payouts.create(this.baseUrl, this.apiKey, data, opts),
-        };
-    }
-    get apiKeys() {
-        return {
-            list: () => resources.apiKeys.list(this.baseUrl, this.apiKey),
-            create: (data) => resources.apiKeys.create(this.baseUrl, this.apiKey, data),
-            delete: (id) => resources.apiKeys.del(this.baseUrl, this.apiKey, id),
+            list: (options) => resources.escrows.list(this.baseUrl, this.apiKey, options, this.clientOpts),
+            get: (id) => resources.escrows.get(this.baseUrl, this.apiKey, id, this.clientOpts),
+            release: (escrowId, opts) => resources.escrows.release(this.baseUrl, this.apiKey, escrowId, opts, this.clientOpts),
+            openDispute: (escrowId, data) => resources.escrows.openDispute(this.baseUrl, this.apiKey, escrowId, data, this.clientOpts),
+            resolveDispute: (escrowId, data, opts) => resources.escrows.resolveDispute(this.baseUrl, this.apiKey, escrowId, data, opts, this.clientOpts),
         };
     }
     get webhookEndpoints() {
         return {
-            list: () => resources.webhookEndpoints.list(this.baseUrl, this.apiKey),
-            get: (id) => resources.webhookEndpoints.get(this.baseUrl, this.apiKey, id),
-            create: (data) => resources.webhookEndpoints.create(this.baseUrl, this.apiKey, data),
-            update: (id, data) => resources.webhookEndpoints.update(this.baseUrl, this.apiKey, id, data),
-            delete: (id) => resources.webhookEndpoints.del(this.baseUrl, this.apiKey, id),
+            list: () => resources.webhookEndpoints.list(this.baseUrl, this.apiKey, this.clientOpts),
+            get: (id) => resources.webhookEndpoints.get(this.baseUrl, this.apiKey, id, this.clientOpts),
+            create: (data) => resources.webhookEndpoints.create(this.baseUrl, this.apiKey, data, this.clientOpts),
+            update: (id, data) => resources.webhookEndpoints.update(this.baseUrl, this.apiKey, id, data, this.clientOpts),
+            delete: (id) => resources.webhookEndpoints.del(this.baseUrl, this.apiKey, id, this.clientOpts),
+            listDeliveries: (id, options) => resources.webhookEndpoints.listDeliveries(this.baseUrl, this.apiKey, id, options, this.clientOpts),
         };
     }
     get onRamp() {
         return {
-            getQuote: (data) => resources.onRamp.getQuote(this.baseUrl, this.apiKey, data),
-            executeTrade: (data, opts) => resources.onRamp.executeTrade(this.baseUrl, this.apiKey, data, opts),
+            createSession: (data) => resources.onRamp.createSession(this.baseUrl, this.apiKey, data, this.clientOpts),
         };
     }
     get offRamp() {
         return {
-            getQuote: (data) => resources.offRamp.getQuote(this.baseUrl, this.apiKey, data),
-            executeTrade: (data, opts) => resources.offRamp.executeTrade(this.baseUrl, this.apiKey, data, opts),
+            createSession: (data) => resources.offRamp.createSession(this.baseUrl, this.apiKey, data, this.clientOpts),
         };
     }
     get webhooks() {

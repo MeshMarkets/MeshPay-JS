@@ -1,9 +1,9 @@
 /**
  * Mesh Pay JavaScript/TypeScript SDK for browser and React Native.
- * Full API client with separation of concerns.
+ * Aligned with mesh-pay/docs/openapi.yml (MeshPay API v1).
  */
 
-import { getBaseUrl } from "./client.js";
+import { getBaseUrl, type ClientConfig } from "./client.js";
 import * as resources from "./resources/index.js";
 import { verifySignature } from "./webhooks.js";
 
@@ -11,130 +11,209 @@ export type { ClientConfig, RequestConfig } from "./client.js";
 export * from "./types.js";
 export { verifySignature } from "./webhooks.js";
 
-export interface Config {
-  apiKey: string;
-  baseUrl?: string;
-}
+export interface Config extends ClientConfig {}
 
 export class MeshPay {
   private baseUrl: string;
   private apiKey: string;
+  private clientOpts: { useXApiKeyHeader?: boolean };
 
   constructor(config: Config) {
     this.apiKey = config.apiKey;
     this.baseUrl = getBaseUrl(config);
+    this.clientOpts = { useXApiKeyHeader: config.useXApiKeyHeader };
   }
 
   get health() {
     return {
-      get: () => resources.health.getHealth(this.baseUrl, this.apiKey),
+      get: () => resources.health.getHealth(this.baseUrl, this.apiKey, this.clientOpts),
     };
   }
 
   get accounts() {
     return {
+      list: () => resources.accounts.list(this.baseUrl, this.apiKey, this.clientOpts),
       create: (data: Parameters<typeof resources.accounts.create>[2]) =>
-        resources.accounts.create(this.baseUrl, this.apiKey, data),
+        resources.accounts.create(this.baseUrl, this.apiKey, data, this.clientOpts),
+      deleteMembership: (membershipId: string) =>
+        resources.accounts.deleteMembership(
+          this.baseUrl,
+          this.apiKey,
+          membershipId,
+          this.clientOpts
+        ),
     };
   }
 
   get wallets() {
     return {
-      create: (data: { account_id: string }) =>
-        resources.wallets.create(this.baseUrl, this.apiKey, data),
-      getByAccountId: (accountId: string) =>
-        resources.wallets.getByAccountId(this.baseUrl, this.apiKey, accountId),
+      list: () => resources.wallets.list(this.baseUrl, this.apiKey, this.clientOpts),
+      getDetail: (
+        membershipId: string,
+        options?: Parameters<typeof resources.wallets.getDetail>[3]
+      ) =>
+        resources.wallets.getDetail(
+          this.baseUrl,
+          this.apiKey,
+          membershipId,
+          options,
+          this.clientOpts
+        ),
+      listFiatAccounts: (membershipId: string) =>
+        resources.wallets.listFiatAccounts(
+          this.baseUrl,
+          this.apiKey,
+          membershipId,
+          this.clientOpts
+        ),
+      linkFiatAccount: (
+        data: Parameters<typeof resources.wallets.linkFiatAccount>[2],
+        opts?: Parameters<typeof resources.wallets.linkFiatAccount>[3]
+      ) =>
+        resources.wallets.linkFiatAccount(
+          this.baseUrl,
+          this.apiKey,
+          data,
+          opts,
+          this.clientOpts
+        ),
+      unlinkFiatAccount: (
+        membershipId: string,
+        fiatAccountId: string,
+        opts?: Parameters<typeof resources.wallets.unlinkFiatAccount>[4]
+      ) =>
+        resources.wallets.unlinkFiatAccount(
+          this.baseUrl,
+          this.apiKey,
+          membershipId,
+          fiatAccountId,
+          opts,
+          this.clientOpts
+        ),
     };
   }
 
   get charges() {
     return {
       list: (options?: Parameters<typeof resources.charges.list>[2]) =>
-        resources.charges.list(this.baseUrl, this.apiKey, options),
-      get: (id: string) => resources.charges.get(this.baseUrl, this.apiKey, id),
+        resources.charges.list(this.baseUrl, this.apiKey, options, this.clientOpts),
+      get: (id: string) => resources.charges.get(this.baseUrl, this.apiKey, id, this.clientOpts),
       create: (
         data: Parameters<typeof resources.charges.create>[2],
         opts?: Parameters<typeof resources.charges.create>[3]
-      ) => resources.charges.create(this.baseUrl, this.apiKey, data, opts),
+      ) => resources.charges.create(this.baseUrl, this.apiKey, data, opts, this.clientOpts),
       fund: (
         chargeId: string,
-        data: Parameters<typeof resources.charges.fund>[3],
+        data?: Parameters<typeof resources.charges.fund>[3],
         opts?: Parameters<typeof resources.charges.fund>[4]
-      ) => resources.charges.fund(this.baseUrl, this.apiKey, chargeId, data, opts),
+      ) =>
+        resources.charges.fund(
+          this.baseUrl,
+          this.apiKey,
+          chargeId,
+          data,
+          opts,
+          this.clientOpts
+        ),
+      cancel: (chargeId: string, opts?: Parameters<typeof resources.charges.cancel>[3]) =>
+        resources.charges.cancel(this.baseUrl, this.apiKey, chargeId, opts, this.clientOpts),
       refund: (
         chargeId: string,
         data?: Parameters<typeof resources.charges.refund>[3],
         opts?: Parameters<typeof resources.charges.refund>[4]
-      ) => resources.charges.refund(this.baseUrl, this.apiKey, chargeId, data, opts),
+      ) =>
+        resources.charges.refund(
+          this.baseUrl,
+          this.apiKey,
+          chargeId,
+          data,
+          opts,
+          this.clientOpts
+        ),
     };
   }
 
   get escrows() {
     return {
       list: (options?: Parameters<typeof resources.escrows.list>[2]) =>
-        resources.escrows.list(this.baseUrl, this.apiKey, options),
-      get: (id: string) => resources.escrows.get(this.baseUrl, this.apiKey, id),
+        resources.escrows.list(this.baseUrl, this.apiKey, options, this.clientOpts),
+      get: (id: string) => resources.escrows.get(this.baseUrl, this.apiKey, id, this.clientOpts),
       release: (
         escrowId: string,
         opts?: Parameters<typeof resources.escrows.release>[3]
-      ) => resources.escrows.release(this.baseUrl, this.apiKey, escrowId, opts),
-    };
-  }
-
-  get payouts() {
-    return {
-      list: (options?: Parameters<typeof resources.payouts.list>[2]) =>
-        resources.payouts.list(this.baseUrl, this.apiKey, options),
-      get: (id: string) => resources.payouts.get(this.baseUrl, this.apiKey, id),
-      create: (
-        data: Parameters<typeof resources.payouts.create>[2],
-        opts?: Parameters<typeof resources.payouts.create>[3]
-      ) => resources.payouts.create(this.baseUrl, this.apiKey, data, opts),
-    };
-  }
-
-  get apiKeys() {
-    return {
-      list: () => resources.apiKeys.list(this.baseUrl, this.apiKey),
-      create: (data?: Parameters<typeof resources.apiKeys.create>[2]) =>
-        resources.apiKeys.create(this.baseUrl, this.apiKey, data),
-      delete: (id: string) => resources.apiKeys.del(this.baseUrl, this.apiKey, id),
+      ) => resources.escrows.release(this.baseUrl, this.apiKey, escrowId, opts, this.clientOpts),
+      openDispute: (
+        escrowId: string,
+        data: Parameters<typeof resources.escrows.openDispute>[3]
+      ) =>
+        resources.escrows.openDispute(
+          this.baseUrl,
+          this.apiKey,
+          escrowId,
+          data,
+          this.clientOpts
+        ),
+      resolveDispute: (
+        escrowId: string,
+        data: Parameters<typeof resources.escrows.resolveDispute>[3],
+        opts?: Parameters<typeof resources.escrows.resolveDispute>[4]
+      ) =>
+        resources.escrows.resolveDispute(
+          this.baseUrl,
+          this.apiKey,
+          escrowId,
+          data,
+          opts,
+          this.clientOpts
+        ),
     };
   }
 
   get webhookEndpoints() {
     return {
-      list: () => resources.webhookEndpoints.list(this.baseUrl, this.apiKey),
-      get: (id: string) => resources.webhookEndpoints.get(this.baseUrl, this.apiKey, id),
+      list: () => resources.webhookEndpoints.list(this.baseUrl, this.apiKey, this.clientOpts),
+      get: (id: string) =>
+        resources.webhookEndpoints.get(this.baseUrl, this.apiKey, id, this.clientOpts),
       create: (data: Parameters<typeof resources.webhookEndpoints.create>[2]) =>
-        resources.webhookEndpoints.create(this.baseUrl, this.apiKey, data),
+        resources.webhookEndpoints.create(this.baseUrl, this.apiKey, data, this.clientOpts),
       update: (
         id: string,
         data: Parameters<typeof resources.webhookEndpoints.update>[3]
-      ) => resources.webhookEndpoints.update(this.baseUrl, this.apiKey, id, data),
-      delete: (id: string) => resources.webhookEndpoints.del(this.baseUrl, this.apiKey, id),
+      ) =>
+        resources.webhookEndpoints.update(
+          this.baseUrl,
+          this.apiKey,
+          id,
+          data,
+          this.clientOpts
+        ),
+      delete: (id: string) =>
+        resources.webhookEndpoints.del(this.baseUrl, this.apiKey, id, this.clientOpts),
+      listDeliveries: (
+        id: string,
+        options?: Parameters<typeof resources.webhookEndpoints.listDeliveries>[3]
+      ) =>
+        resources.webhookEndpoints.listDeliveries(
+          this.baseUrl,
+          this.apiKey,
+          id,
+          options,
+          this.clientOpts
+        ),
     };
   }
 
   get onRamp() {
     return {
-      getQuote: (data: Parameters<typeof resources.onRamp.getQuote>[2]) =>
-        resources.onRamp.getQuote(this.baseUrl, this.apiKey, data),
-      executeTrade: (
-        data: Parameters<typeof resources.onRamp.executeTrade>[2],
-        opts?: Parameters<typeof resources.onRamp.executeTrade>[3]
-      ) => resources.onRamp.executeTrade(this.baseUrl, this.apiKey, data, opts),
+      createSession: (data: Parameters<typeof resources.onRamp.createSession>[2]) =>
+        resources.onRamp.createSession(this.baseUrl, this.apiKey, data, this.clientOpts),
     };
   }
 
   get offRamp() {
     return {
-      getQuote: (data: Parameters<typeof resources.offRamp.getQuote>[2]) =>
-        resources.offRamp.getQuote(this.baseUrl, this.apiKey, data),
-      executeTrade: (
-        data: Parameters<typeof resources.offRamp.executeTrade>[2],
-        opts?: Parameters<typeof resources.offRamp.executeTrade>[3]
-      ) => resources.offRamp.executeTrade(this.baseUrl, this.apiKey, data, opts),
+      createSession: (data: Parameters<typeof resources.offRamp.createSession>[2]) =>
+        resources.offRamp.createSession(this.baseUrl, this.apiKey, data, this.clientOpts),
     };
   }
 

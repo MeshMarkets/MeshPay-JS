@@ -1,27 +1,18 @@
-import type {
-  OnRampQuoteRequest,
-  OnRampQuoteResponse,
-  OnRampTradeRequest,
-  RequestOptions,
-} from "../types.js";
+import type { OnRampSessionRequest } from "../types.js";
 import { request } from "../client.js";
 
-export function getQuote(
+/** POST /on-ramp/sessions — Coinbase-hosted onramp (returns session.onrampUrl per API). */
+export function createSession(
   baseUrl: string,
   apiKey: string,
-  data: OnRampQuoteRequest
-): Promise<OnRampQuoteResponse> {
-  return request<OnRampQuoteResponse>(baseUrl, apiKey, "/on-ramp/quote", { body: data });
-}
-
-export function executeTrade(
-  baseUrl: string,
-  apiKey: string,
-  data: OnRampTradeRequest,
-  opts?: RequestOptions
+  data: OnRampSessionRequest,
+  clientOpts?: { useXApiKeyHeader?: boolean }
 ): Promise<Record<string, unknown>> {
-  return request(baseUrl, apiKey, "/on-ramp/trade", {
-    body: data,
-    idempotencyKey: opts?.idempotencyKey,
-  });
+  return request<Record<string, unknown>>(
+    baseUrl,
+    apiKey,
+    "/on-ramp/sessions",
+    { body: data },
+    clientOpts
+  );
 }

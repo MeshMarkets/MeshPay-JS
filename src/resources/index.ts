@@ -3,8 +3,6 @@ export * as accounts from "./accounts.js";
 export * as wallets from "./wallets.js";
 export * as charges from "./charges.js";
 export * as escrows from "./escrows.js";
-export * as payouts from "./payouts.js";
-export * as apiKeys from "./api-keys.js";
 export * as webhookEndpoints from "./webhook-endpoints.js";
 export * as onRamp from "./on-ramp.js";
 export * as offRamp from "./off-ramp.js";

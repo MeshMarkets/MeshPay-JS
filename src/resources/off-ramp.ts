@@ -1,27 +1,18 @@
-import type {
-  OffRampQuoteRequest,
-  OffRampQuoteResponse,
-  OffRampTradeRequest,
-  RequestOptions,
-} from "../types.js";
+import type { OffRampSessionRequest } from "../types.js";
 import { request } from "../client.js";
 
-export function getQuote(
+/** POST /off-ramp/sessions — Coinbase-hosted offramp (sessionToken + offrampUrl per API). */
+export function createSession(
   baseUrl: string,
   apiKey: string,
-  data: OffRampQuoteRequest
-): Promise<OffRampQuoteResponse> {
-  return request<OffRampQuoteResponse>(baseUrl, apiKey, "/off-ramp/quote", { body: data });
-}
-
-export function executeTrade(
-  baseUrl: string,
-  apiKey: string,
-  data: OffRampTradeRequest,
-  opts?: RequestOptions
+  data: OffRampSessionRequest,
+  clientOpts?: { useXApiKeyHeader?: boolean }
 ): Promise<Record<string, unknown>> {
-  return request(baseUrl, apiKey, "/off-ramp/trade", {
-    body: data,
-    idempotencyKey: opts?.idempotencyKey,
-  });
+  return request<Record<string, unknown>>(
+    baseUrl,
+    apiKey,
+    "/off-ramp/sessions",
+    { body: data },
+    clientOpts
+  );
 }
