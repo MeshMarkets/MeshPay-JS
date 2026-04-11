@@ -59,37 +59,6 @@ export class MeshPay {
           options,
           this.clientOpts
         ),
-      listFiatAccounts: (membershipId: string) =>
-        resources.wallets.listFiatAccounts(
-          this.baseUrl,
-          this.apiKey,
-          membershipId,
-          this.clientOpts
-        ),
-      linkFiatAccount: (
-        data: Parameters<typeof resources.wallets.linkFiatAccount>[2],
-        opts?: Parameters<typeof resources.wallets.linkFiatAccount>[3]
-      ) =>
-        resources.wallets.linkFiatAccount(
-          this.baseUrl,
-          this.apiKey,
-          data,
-          opts,
-          this.clientOpts
-        ),
-      unlinkFiatAccount: (
-        membershipId: string,
-        fiatAccountId: string,
-        opts?: Parameters<typeof resources.wallets.unlinkFiatAccount>[4]
-      ) =>
-        resources.wallets.unlinkFiatAccount(
-          this.baseUrl,
-          this.apiKey,
-          membershipId,
-          fiatAccountId,
-          opts,
-          this.clientOpts
-        ),
     };
   }
 
@@ -102,6 +71,17 @@ export class MeshPay {
         data: Parameters<typeof resources.charges.create>[2],
         opts?: Parameters<typeof resources.charges.create>[3]
       ) => resources.charges.create(this.baseUrl, this.apiKey, data, opts, this.clientOpts),
+      createPooled: (
+        data: Parameters<typeof resources.charges.createPooled>[2],
+        opts?: Parameters<typeof resources.charges.createPooled>[3]
+      ) =>
+        resources.charges.createPooled(
+          this.baseUrl,
+          this.apiKey,
+          data,
+          opts,
+          this.clientOpts
+        ),
       fund: (
         chargeId: string,
         data?: Parameters<typeof resources.charges.fund>[3],
@@ -142,6 +122,43 @@ export class MeshPay {
         escrowId: string,
         opts?: Parameters<typeof resources.escrows.release>[3]
       ) => resources.escrows.release(this.baseUrl, this.apiKey, escrowId, opts, this.clientOpts),
+      createContribution: (
+        escrowId: string,
+        data: Parameters<typeof resources.escrows.createContribution>[3],
+        opts?: Parameters<typeof resources.escrows.createContribution>[4]
+      ) =>
+        resources.escrows.createContribution(
+          this.baseUrl,
+          this.apiKey,
+          escrowId,
+          data,
+          opts,
+          this.clientOpts
+        ),
+      setPayee: (
+        escrowId: string,
+        data: Parameters<typeof resources.escrows.setPayee>[3],
+        opts?: Parameters<typeof resources.escrows.setPayee>[4]
+      ) =>
+        resources.escrows.setPayee(
+          this.baseUrl,
+          this.apiKey,
+          escrowId,
+          data,
+          opts,
+          this.clientOpts
+        ),
+      cancelPool: (
+        escrowId: string,
+        opts?: Parameters<typeof resources.escrows.cancelPool>[3]
+      ) =>
+        resources.escrows.cancelPool(
+          this.baseUrl,
+          this.apiKey,
+          escrowId,
+          opts,
+          this.clientOpts
+        ),
       openDispute: (
         escrowId: string,
         data: Parameters<typeof resources.escrows.openDispute>[3]

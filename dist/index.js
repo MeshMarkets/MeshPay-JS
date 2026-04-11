@@ -72,9 +72,6 @@ class MeshPay {
         return {
             list: () => resources.wallets.list(this.baseUrl, this.apiKey, this.clientOpts),
             getDetail: (membershipId, options) => resources.wallets.getDetail(this.baseUrl, this.apiKey, membershipId, options, this.clientOpts),
-            listFiatAccounts: (membershipId) => resources.wallets.listFiatAccounts(this.baseUrl, this.apiKey, membershipId, this.clientOpts),
-            linkFiatAccount: (data, opts) => resources.wallets.linkFiatAccount(this.baseUrl, this.apiKey, data, opts, this.clientOpts),
-            unlinkFiatAccount: (membershipId, fiatAccountId, opts) => resources.wallets.unlinkFiatAccount(this.baseUrl, this.apiKey, membershipId, fiatAccountId, opts, this.clientOpts),
         };
     }
     get charges() {
@@ -82,6 +79,7 @@ class MeshPay {
             list: (options) => resources.charges.list(this.baseUrl, this.apiKey, options, this.clientOpts),
             get: (id) => resources.charges.get(this.baseUrl, this.apiKey, id, this.clientOpts),
             create: (data, opts) => resources.charges.create(this.baseUrl, this.apiKey, data, opts, this.clientOpts),
+            createPooled: (data, opts) => resources.charges.createPooled(this.baseUrl, this.apiKey, data, opts, this.clientOpts),
             fund: (chargeId, data, opts) => resources.charges.fund(this.baseUrl, this.apiKey, chargeId, data, opts, this.clientOpts),
             cancel: (chargeId, opts) => resources.charges.cancel(this.baseUrl, this.apiKey, chargeId, opts, this.clientOpts),
             refund: (chargeId, data, opts) => resources.charges.refund(this.baseUrl, this.apiKey, chargeId, data, opts, this.clientOpts),
@@ -92,6 +90,9 @@ class MeshPay {
             list: (options) => resources.escrows.list(this.baseUrl, this.apiKey, options, this.clientOpts),
             get: (id) => resources.escrows.get(this.baseUrl, this.apiKey, id, this.clientOpts),
             release: (escrowId, opts) => resources.escrows.release(this.baseUrl, this.apiKey, escrowId, opts, this.clientOpts),
+            createContribution: (escrowId, data, opts) => resources.escrows.createContribution(this.baseUrl, this.apiKey, escrowId, data, opts, this.clientOpts),
+            setPayee: (escrowId, data, opts) => resources.escrows.setPayee(this.baseUrl, this.apiKey, escrowId, data, opts, this.clientOpts),
+            cancelPool: (escrowId, opts) => resources.escrows.cancelPool(this.baseUrl, this.apiKey, escrowId, opts, this.clientOpts),
             openDispute: (escrowId, data) => resources.escrows.openDispute(this.baseUrl, this.apiKey, escrowId, data, this.clientOpts),
             resolveDispute: (escrowId, data, opts) => resources.escrows.resolveDispute(this.baseUrl, this.apiKey, escrowId, data, opts, this.clientOpts),
         };

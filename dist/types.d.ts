@@ -58,27 +58,6 @@ export interface WalletDetail {
     balances: TokenBalance[];
     balance_error?: string;
 }
-export interface FiatAccount {
-    id: string;
-    provider: string;
-    external_account_id: string;
-    currency: string;
-    country: string;
-    label: string;
-    status: string;
-    metadata: Record<string, unknown>;
-    created_at: string;
-}
-export interface LinkFiatAccountRequest {
-    membership_id: string;
-    provider?: string;
-    external_account_id?: string;
-    provider_request?: Record<string, unknown>;
-    currency?: string;
-    country?: string;
-    label?: string;
-    metadata?: Record<string, unknown>;
-}
 export interface Charge {
     charge_id: string;
     escrow_id: string;
@@ -89,6 +68,10 @@ export interface Charge {
     amount?: number;
     currency?: string;
     created_at?: string;
+    /** Present for pooled escrows */
+    target_amount?: number;
+    funded_amount?: number;
+    pool_mode?: string;
 }
 export interface CreateChargeRequest {
     payee_membership_id: string;
@@ -105,6 +88,23 @@ export interface CreateChargeResponse {
     escrow_slot_id?: string;
     amount?: number;
     deposit_instructions?: string;
+}
+export type PooledPoolMode = "closed" | "open";
+export interface CreatePooledChargeRequest {
+    target_amount: number;
+    pool_mode: PooledPoolMode | string;
+    contributor_membership_ids?: string[];
+    payee_membership_id?: string;
+    currency?: string;
+}
+export interface CreatePooledChargeResponse {
+    charge_id: string;
+    escrow_id: string;
+    status: string;
+    target_amount: number;
+    funded_amount: number;
+    pool_mode: string;
+    payee_membership_id?: string;
 }
 export interface RefundChargeRequest {
     amount?: number;
@@ -125,6 +125,9 @@ export interface Escrow {
     payee_membership_id?: string | null;
     escrow_contract_address?: string | null;
     fund_tx_hash?: string | null;
+    target_amount?: number | null;
+    funded_amount?: number | null;
+    pool_mode?: string | null;
 }
 export interface ReleaseEscrowResponse {
     status: string;
@@ -132,6 +135,13 @@ export interface ReleaseEscrowResponse {
     meshpay_fee: number;
     developer_fee: number;
     release_tx_hash?: string;
+}
+export interface CreateEscrowContributionRequest {
+    contributor_membership_id: string;
+    amount: number;
+}
+export interface SetEscrowPayeeRequest {
+    payee_membership_id: string;
 }
 export interface OpenEscrowDisputeRequest {
     tx_hash: string;

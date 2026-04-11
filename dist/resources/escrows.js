@@ -3,6 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.list = list;
 exports.get = get;
 exports.release = release;
+exports.createContribution = createContribution;
+exports.setPayee = setPayee;
+exports.cancelPool = cancelPool;
 exports.openDispute = openDispute;
 exports.resolveDispute = resolveDispute;
 const client_js_1 = require("../client.js");
@@ -17,6 +20,24 @@ function get(baseUrl, apiKey, id, clientOpts) {
 }
 function release(baseUrl, apiKey, escrowId, opts, clientOpts) {
     return (0, client_js_1.request)(baseUrl, apiKey, `/escrows/${escrowId}/release`, {
+        body: {},
+        idempotencyKey: opts?.idempotencyKey,
+    }, clientOpts);
+}
+function createContribution(baseUrl, apiKey, escrowId, data, opts, clientOpts) {
+    return (0, client_js_1.request)(baseUrl, apiKey, `/escrows/${escrowId}/contributions`, {
+        body: data,
+        idempotencyKey: opts?.idempotencyKey,
+    }, clientOpts);
+}
+function setPayee(baseUrl, apiKey, escrowId, data, opts, clientOpts) {
+    return (0, client_js_1.request)(baseUrl, apiKey, `/escrows/${escrowId}/set-payee`, {
+        body: data,
+        idempotencyKey: opts?.idempotencyKey,
+    }, clientOpts);
+}
+function cancelPool(baseUrl, apiKey, escrowId, opts, clientOpts) {
+    return (0, client_js_1.request)(baseUrl, apiKey, `/escrows/${escrowId}/cancel-pool`, {
         body: {},
         idempotencyKey: opts?.idempotencyKey,
     }, clientOpts);

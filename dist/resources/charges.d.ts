@@ -1,4 +1,4 @@
-import type { Charge, CreateChargeRequest, CreateChargeResponse, FundChargeRequest, ListOptions, ListResponse, RefundChargeRequest, RequestOptions } from "../types.js";
+import type { Charge, CreateChargeRequest, CreateChargeResponse, CreatePooledChargeRequest, CreatePooledChargeResponse, FundChargeRequest, ListOptions, ListResponse, RefundChargeRequest, RequestOptions } from "../types.js";
 export declare function list(baseUrl: string, apiKey: string, options?: ListOptions, clientOpts?: {
     useXApiKeyHeader?: boolean;
 }): Promise<ListResponse<Charge>>;
@@ -8,6 +8,9 @@ export declare function get(baseUrl: string, apiKey: string, id: string, clientO
 export declare function create(baseUrl: string, apiKey: string, data: CreateChargeRequest, opts?: RequestOptions, clientOpts?: {
     useXApiKeyHeader?: boolean;
 }): Promise<CreateChargeResponse>;
+export declare function createPooled(baseUrl: string, apiKey: string, data: CreatePooledChargeRequest, opts?: RequestOptions, clientOpts?: {
+    useXApiKeyHeader?: boolean;
+}): Promise<CreatePooledChargeResponse>;
 export declare function fund(baseUrl: string, apiKey: string, chargeId: string, data?: FundChargeRequest, opts?: RequestOptions, clientOpts?: {
     useXApiKeyHeader?: boolean;
 }): Promise<{

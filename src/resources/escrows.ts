@@ -1,4 +1,5 @@
 import type {
+  CreateEscrowContributionRequest,
   Escrow,
   ListOptions,
   ListResponse,
@@ -7,6 +8,7 @@ import type {
   RequestOptions,
   ResolveEscrowDisputeRequest,
   ResolveEscrowDisputeResponse,
+  SetEscrowPayeeRequest,
 } from "../types.js";
 import { request } from "../client.js";
 
@@ -54,6 +56,65 @@ export function release(
     baseUrl,
     apiKey,
     `/escrows/${escrowId}/release`,
+    {
+      body: {},
+      idempotencyKey: opts?.idempotencyKey,
+    },
+    clientOpts
+  );
+}
+
+export function createContribution(
+  baseUrl: string,
+  apiKey: string,
+  escrowId: string,
+  data: CreateEscrowContributionRequest,
+  opts?: RequestOptions,
+  clientOpts?: { useXApiKeyHeader?: boolean }
+): Promise<Record<string, unknown>> {
+  return request(
+    baseUrl,
+    apiKey,
+    `/escrows/${escrowId}/contributions`,
+    {
+      body: data,
+      idempotencyKey: opts?.idempotencyKey,
+    },
+    clientOpts
+  );
+}
+
+export function setPayee(
+  baseUrl: string,
+  apiKey: string,
+  escrowId: string,
+  data: SetEscrowPayeeRequest,
+  opts?: RequestOptions,
+  clientOpts?: { useXApiKeyHeader?: boolean }
+): Promise<Record<string, unknown>> {
+  return request(
+    baseUrl,
+    apiKey,
+    `/escrows/${escrowId}/set-payee`,
+    {
+      body: data,
+      idempotencyKey: opts?.idempotencyKey,
+    },
+    clientOpts
+  );
+}
+
+export function cancelPool(
+  baseUrl: string,
+  apiKey: string,
+  escrowId: string,
+  opts?: RequestOptions,
+  clientOpts?: { useXApiKeyHeader?: boolean }
+): Promise<Record<string, unknown>> {
+  return request(
+    baseUrl,
+    apiKey,
+    `/escrows/${escrowId}/cancel-pool`,
     {
       body: {},
       idempotencyKey: opts?.idempotencyKey,

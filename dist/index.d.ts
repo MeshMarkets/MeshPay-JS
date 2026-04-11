@@ -26,14 +26,12 @@ export declare class MeshPay {
     get wallets(): {
         list: () => Promise<import("./types.js").ListResponse<import("./types.js").WalletSummary>>;
         getDetail: (membershipId: string, options?: Parameters<typeof resources.wallets.getDetail>[3]) => Promise<import("./types.js").WalletDetail>;
-        listFiatAccounts: (membershipId: string) => Promise<import("./types.js").ListResponse<import("./types.js").FiatAccount>>;
-        linkFiatAccount: (data: Parameters<typeof resources.wallets.linkFiatAccount>[2], opts?: Parameters<typeof resources.wallets.linkFiatAccount>[3]) => Promise<void | Record<string, unknown>>;
-        unlinkFiatAccount: (membershipId: string, fiatAccountId: string, opts?: Parameters<typeof resources.wallets.unlinkFiatAccount>[4]) => Promise<void>;
     };
     get charges(): {
         list: (options?: Parameters<typeof resources.charges.list>[2]) => Promise<import("./types.js").ListResponse<import("./types.js").Charge>>;
         get: (id: string) => Promise<import("./types.js").Charge>;
         create: (data: Parameters<typeof resources.charges.create>[2], opts?: Parameters<typeof resources.charges.create>[3]) => Promise<import("./types.js").CreateChargeResponse>;
+        createPooled: (data: Parameters<typeof resources.charges.createPooled>[2], opts?: Parameters<typeof resources.charges.createPooled>[3]) => Promise<import("./types.js").CreatePooledChargeResponse>;
         fund: (chargeId: string, data?: Parameters<typeof resources.charges.fund>[3], opts?: Parameters<typeof resources.charges.fund>[4]) => Promise<{
             status: string;
             tx_hash?: string;
@@ -52,6 +50,9 @@ export declare class MeshPay {
         list: (options?: Parameters<typeof resources.escrows.list>[2]) => Promise<import("./types.js").ListResponse<import("./types.js").Escrow>>;
         get: (id: string) => Promise<import("./types.js").Escrow>;
         release: (escrowId: string, opts?: Parameters<typeof resources.escrows.release>[3]) => Promise<import("./types.js").ReleaseEscrowResponse>;
+        createContribution: (escrowId: string, data: Parameters<typeof resources.escrows.createContribution>[3], opts?: Parameters<typeof resources.escrows.createContribution>[4]) => Promise<Record<string, unknown>>;
+        setPayee: (escrowId: string, data: Parameters<typeof resources.escrows.setPayee>[3], opts?: Parameters<typeof resources.escrows.setPayee>[4]) => Promise<Record<string, unknown>>;
+        cancelPool: (escrowId: string, opts?: Parameters<typeof resources.escrows.cancelPool>[3]) => Promise<Record<string, unknown>>;
         openDispute: (escrowId: string, data: Parameters<typeof resources.escrows.openDispute>[3]) => Promise<{
             status: string;
             tx_hash: string;

@@ -1,4 +1,4 @@
-import type { Escrow, ListOptions, ListResponse, OpenEscrowDisputeRequest, ReleaseEscrowResponse, RequestOptions, ResolveEscrowDisputeRequest, ResolveEscrowDisputeResponse } from "../types.js";
+import type { CreateEscrowContributionRequest, Escrow, ListOptions, ListResponse, OpenEscrowDisputeRequest, ReleaseEscrowResponse, RequestOptions, ResolveEscrowDisputeRequest, ResolveEscrowDisputeResponse, SetEscrowPayeeRequest } from "../types.js";
 export declare function list(baseUrl: string, apiKey: string, options?: Pick<ListOptions, "limit" | "status">, clientOpts?: {
     useXApiKeyHeader?: boolean;
 }): Promise<ListResponse<Escrow>>;
@@ -8,6 +8,15 @@ export declare function get(baseUrl: string, apiKey: string, id: string, clientO
 export declare function release(baseUrl: string, apiKey: string, escrowId: string, opts?: RequestOptions, clientOpts?: {
     useXApiKeyHeader?: boolean;
 }): Promise<ReleaseEscrowResponse>;
+export declare function createContribution(baseUrl: string, apiKey: string, escrowId: string, data: CreateEscrowContributionRequest, opts?: RequestOptions, clientOpts?: {
+    useXApiKeyHeader?: boolean;
+}): Promise<Record<string, unknown>>;
+export declare function setPayee(baseUrl: string, apiKey: string, escrowId: string, data: SetEscrowPayeeRequest, opts?: RequestOptions, clientOpts?: {
+    useXApiKeyHeader?: boolean;
+}): Promise<Record<string, unknown>>;
+export declare function cancelPool(baseUrl: string, apiKey: string, escrowId: string, opts?: RequestOptions, clientOpts?: {
+    useXApiKeyHeader?: boolean;
+}): Promise<Record<string, unknown>>;
 export declare function openDispute(baseUrl: string, apiKey: string, escrowId: string, data: OpenEscrowDisputeRequest, clientOpts?: {
     useXApiKeyHeader?: boolean;
 }): Promise<{

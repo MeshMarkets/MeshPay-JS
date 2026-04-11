@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.list = list;
 exports.get = get;
 exports.create = create;
+exports.createPooled = createPooled;
 exports.fund = fund;
 exports.cancel = cancel;
 exports.refund = refund;
@@ -18,6 +19,12 @@ function get(baseUrl, apiKey, id, clientOpts) {
 }
 function create(baseUrl, apiKey, data, opts, clientOpts) {
     return (0, client_js_1.request)(baseUrl, apiKey, "/charges", {
+        body: data,
+        idempotencyKey: opts?.idempotencyKey,
+    }, clientOpts);
+}
+function createPooled(baseUrl, apiKey, data, opts, clientOpts) {
+    return (0, client_js_1.request)(baseUrl, apiKey, "/pooled-charges", {
         body: data,
         idempotencyKey: opts?.idempotencyKey,
     }, clientOpts);

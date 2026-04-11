@@ -1,8 +1,5 @@
 import type {
-  FiatAccount,
-  LinkFiatAccountRequest,
   ListResponse,
-  RequestOptions,
   WalletDetail,
   WalletNetwork,
   WalletSummary,
@@ -37,64 +34,6 @@ export function getDetail(
     {
       method: "GET",
       params: options?.network ? { network: options.network } : undefined,
-    },
-    clientOpts
-  );
-}
-
-export function listFiatAccounts(
-  baseUrl: string,
-  apiKey: string,
-  membershipId: string,
-  clientOpts?: { useXApiKeyHeader?: boolean }
-): Promise<ListResponse<FiatAccount>> {
-  return request<ListResponse<FiatAccount>>(
-    baseUrl,
-    apiKey,
-    "/wallets/fiat-accounts",
-    {
-      method: "GET",
-      params: { membership_id: membershipId },
-    },
-    clientOpts
-  );
-}
-
-export function linkFiatAccount(
-  baseUrl: string,
-  apiKey: string,
-  data: LinkFiatAccountRequest,
-  opts?: RequestOptions,
-  clientOpts?: { useXApiKeyHeader?: boolean }
-): Promise<Record<string, unknown> | void> {
-  return request(
-    baseUrl,
-    apiKey,
-    "/wallets/fiat-accounts",
-    {
-      body: data,
-      idempotencyKey: opts?.idempotencyKey,
-    },
-    clientOpts
-  );
-}
-
-export function unlinkFiatAccount(
-  baseUrl: string,
-  apiKey: string,
-  membershipId: string,
-  fiatAccountId: string,
-  opts?: RequestOptions,
-  clientOpts?: { useXApiKeyHeader?: boolean }
-): Promise<void> {
-  return request<void>(
-    baseUrl,
-    apiKey,
-    "/wallets/fiat-accounts",
-    {
-      method: "DELETE",
-      params: { membership_id: membershipId, fiat_account_id: fiatAccountId },
-      idempotencyKey: opts?.idempotencyKey,
     },
     clientOpts
   );

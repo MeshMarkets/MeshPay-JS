@@ -2,6 +2,8 @@ import type {
   Charge,
   CreateChargeRequest,
   CreateChargeResponse,
+  CreatePooledChargeRequest,
+  CreatePooledChargeResponse,
   FundChargeRequest,
   ListOptions,
   ListResponse,
@@ -54,6 +56,25 @@ export function create(
     baseUrl,
     apiKey,
     "/charges",
+    {
+      body: data,
+      idempotencyKey: opts?.idempotencyKey,
+    },
+    clientOpts
+  );
+}
+
+export function createPooled(
+  baseUrl: string,
+  apiKey: string,
+  data: CreatePooledChargeRequest,
+  opts?: RequestOptions,
+  clientOpts?: { useXApiKeyHeader?: boolean }
+): Promise<CreatePooledChargeResponse> {
+  return request<CreatePooledChargeResponse>(
+    baseUrl,
+    apiKey,
+    "/pooled-charges",
     {
       body: data,
       idempotencyKey: opts?.idempotencyKey,
